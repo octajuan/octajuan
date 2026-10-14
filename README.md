@@ -16,7 +16,8 @@ de diagnóstico por imagen en Michoacán, México.
 > and the clinical archive. Stack: TypeScript, React 19, Cloudflare Workers, D1,
 > R2, Cornerstone3D 5.8, dcmjs, Tiptap/ProseMirror.
 
-Sitio: [lucidapacs.com](https://lucidapacs.com)
+En producción: [clinicacmdh.com](https://clinicacmdh.com) · Visor gratuito:
+[lucidapacs.com](https://lucidapacs.com)
 
 ---
 
@@ -34,6 +35,39 @@ Quería tres cosas que no encontraba juntas:
    no una versión recortada.
 3. Que el informe se guarde como estructura, para que un día pueda alimentar
    dictado, plantillas e IA sin reescribir todo.
+
+## En producción: clinicacmdh.com
+
+La plataforma no es un prototipo. Es el sistema con el que opera
+[Clínica CMDH](https://clinicacmdh.com), un centro de diagnóstico en
+Huandacareo, Michoacán (ultrasonido, rayos X, mastografía, laboratorio y
+electrocardiograma). En mi práctica diaria registro a los pacientes, subo los
+estudios DICOM y redacto el informe en el editor integrado, junto al visor, sin
+cambiar de sistema.
+
+El recorrido de un estudio, de la solicitud al resultado:
+
+```
+ solicitud o cita ──> registro del paciente ──> adquisición y carga DICOM
+        ──> interpretación en el visor clínico + informe en el editor integrado
+        ──> envío del resultado ──> paciente · médico referente · centro de salud
+```
+
+| Superficie | Para quién | Qué hace |
+| --- | --- | --- |
+| **Sitio público** · [clinicacmdh.com](https://clinicacmdh.com) | Pacientes y médicos | Catálogo de estudios, horarios, ubicación y preparación; entrada a solicitudes, citas y portal médico. |
+| **Solicitudes y citas** · [solicitudes](https://solicitudes.clinicacmdh.com) · [citas](https://citas.clinicacmdh.com) | Pacientes y médicos | Solicitud de estudio y cita en línea que llegan directamente al registro de la clínica. |
+| **Registro clínico** | Personal de la clínica | Pacientes, visitas y estudios con auditoría; carga de DICOM a almacenamiento privado; expediente longitudinal que recupera estudios previos del mismo paciente. |
+| **Visor clínico + editor de informes** | Radiólogo | El Viewer Core sobre los originales del archivo, lado a lado con el editor estructurado; versionado, firma y PDF tamaño carta. |
+| **Resultado del paciente** | Pacientes | Enlace privado firmado (HMAC, revocable) que se envía por WhatsApp: informe, imágenes en el visor y estudios anteriores, sin crear cuenta. |
+| **Mi embarazo** | Pacientes obstétricas | Dentro del mismo enlace, una línea del tiempo del embarazo construida con los datos estructurados del informe firmado (FUR, edad gestacional, biometría fetal). |
+| **Portal de médicos** · [medicos.clinicacmdh.com](https://medicos.clinicacmdh.com) | Médicos referentes | Cuenta individual: solicitudes digitales, citas y consulta de informes e imágenes de sus pacientes referidos, solo de estudios finalizados. |
+| **Portal de centros de salud** | Centros de salud de la región | Cuenta por centro, con el nombre de quien consulta en cada evento de auditoría; solo ve los estudios que ese centro refirió. |
+| **Visor gratuito** · [lucidapacs.com](https://lucidapacs.com) | Cualquier persona | Abre CD, USB o carpetas DICOM en el navegador; las imágenes no salen del equipo. |
+
+Cada superficie ve solo lo que le corresponde: el médico, sus pacientes; el
+centro, sus referencias; el paciente, su propio expediente. El control de acceso
+se aplica en el servidor en cada consulta, no solo en la interfaz.
 
 ## Qué hace hoy
 
@@ -76,12 +110,6 @@ analytics, sin persistencia. Es el modo que cualquiera puede probar en el sitio.
   terceros.
 - Versionado de informes y PDF tamaño carta con membrete, paginación, firma y
   código QR del estudio en cada hoja.
-
-**Plataforma clínica**
-
-Registro de pacientes, visitas y estudios con auditoría, acceso de pacientes a
-resultados mediante enlaces firmados (sin crear cuenta) e ingreso DICOM desde la
-clínica preparado para un gateway local.
 
 ## Decisiones que me importan
 

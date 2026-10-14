@@ -9,16 +9,46 @@ aplicada a imagen médica. Diseñé, programé y opero en producción una plataf
 radiológica completa: ingreso DICOM, visor web, informe estructurado y entrega
 segura de resultados. La uso todos los días para leer e informar estudios.
 
+## Visor LUCIDA
+
+LUCIDA es el visor DICOM web que desarrollé y con el que leo en producción. Su
+versión local es de uso libre: **[pruébalo en lucidapacs.com](https://lucidapacs.com)**
+con un CD, USB o carpeta DICOM, o con los estudios de demostración. Las imágenes se procesan en tu equipo
+y no se suben a ningún servidor.
+
+**Implementación.** Un solo núcleo de visualización (Viewer Core) sobre
+Cornerstone3D recibe imágenes de tres fuentes con el mismo contrato, de modo que
+el visor gratuito y el clínico son el mismo código, no una versión recortada:
+
+```
+ CD / USB / carpeta ──> LocalDiscovery ──> LocalSource ──┐
+ manifests estáticos ─────────────────────> DemoSource ──┼──> Viewer Core (Cornerstone3D)
+ archivo clínico (R2 privado + D1) ───────> ClinicalSource┘
+```
+
+`LocalSource` lee `File`/`Blob` en el navegador, interpreta DICOMDIR (con
+respaldo de descubrimiento directo cuando está incompleto), archivos sin
+extensión, Encapsulated PDF y DICOM SR, sin base de datos ni persistencia.
+`ClinicalSource` sirve los originales desde almacenamiento privado con acceso
+por capacidad.
+
+**Funciones:**
+
+- Stack 2D con prefetch, ventana/nivel por modalidad, mediciones y anotaciones.
+- MPR ortogonal y oblicuo, proyecciones MIP/MinIP, líneas de referencia y
+  reconstrucción volumétrica de TC y RM.
+- Fusión PET/CT con cálculo de SUV; mastografía con hanging protocol y soporte
+  inicial de tomosíntesis.
+- Segmentación con estadísticas y superficie 3D; compatibilidad con
+  **DICOM SEG** y **DICOM SR**.
+
 ## Resumen técnico
 
 - **Visor DICOM web sobre WebGL.** Cornerstone3D con MPR ortogonal y oblicuo,
   MIP/MinIP, reconstrucción volumétrica, fusión PET/CT con SUV y mastografía.
-  Lectura y escritura de **DICOM SEG** y **DICOM SR**, el punto de integración
-  natural para devolver al visor las segmentaciones y hallazgos de un modelo.
-- **Inteligencia artificial.** Tesis de especialidad con aprendizaje profundo por
-  transferencia para clasificar nódulos tiroideos candidatos a biopsia. El
-  informe se guarda como JSON estructurado, no como texto libre, para que pueda
-  alimentar plantillas, dictado y LLMs sin reprocesar documentos.
+- **Inteligencia artificial.** El informe se guarda como JSON estructurado, no
+  como texto libre, para que pueda alimentar plantillas, dictado y LLMs sin
+  reprocesar documentos.
 - **LLMs en el desarrollo.** Construyo con agentes de programación (Claude Code,
   Codex) en un flujo con control de versiones, pruebas automatizadas y traspasos
   documentados entre agentes. Sé dónde ayudan y dónde hay que verificar cada
@@ -28,7 +58,6 @@ segura de resultados. La uso todos los días para leer e informar estudios.
   solicitudes) y control de acceso aplicado en el servidor en cada consulta.
 - **Infraestructura serverless.** TypeScript estricto, React 19, Cloudflare
   Workers, D1 (SQLite) con Drizzle ORM y almacenamiento de objetos R2 privado.
-  Más de 1,000 casos de prueba automatizados.
 
 ## Impacto en la práctica
 
@@ -50,10 +79,9 @@ segura de resultados. La uso todos los días para leer e informar estudios.
 > **In English.** Radiologist (UNAM) with hands-on software engineering and
 > applied AI experience. I designed, built and run in production a full
 > radiology platform: DICOM ingestion, a WebGL viewer (Cornerstone3D: MPR,
-> volume rendering, PET/CT, DICOM SEG/SR), structured JSON reporting and signed
-> results delivery on Cloudflare Workers, D1 and R2, with 1,000+ automated tests.
-> Residency thesis on deep transfer learning for thyroid nodule biopsy triage.
-> I build with LLM coding agents under version control and test discipline.
+> volume rendering, PET/CT), structured JSON reporting and signed results
+> delivery on Cloudflare Workers, D1 and R2. I build with LLM coding agents
+> under version control and test discipline.
 
 ---
 
@@ -88,47 +116,13 @@ El recorrido de un estudio:
 | **Visor clínico + editor de informes** | Radiólogo | Visor sobre los originales del archivo, lado a lado con el editor estructurado; versionado, firma y PDF tamaño carta. |
 | **Resultado del paciente** | Pacientes | Enlace privado firmado (HMAC, revocable) que se envía por WhatsApp: informe, imágenes y estudios anteriores, sin crear cuenta. |
 | **Mi embarazo** | Pacientes obstétricas | Dentro del mismo enlace, una línea del tiempo del embarazo construida con los datos estructurados del informe firmado (FUR, edad gestacional, biometría fetal). |
-| **Portal de médicos** · [medicos.clinicacmdh.com](https://medicos.clinicacmdh.com) | Médicos referentes | Cuenta individual: solicitudes digitales, citas y consulta de informes e imágenes de sus pacientes referidos, solo de estudios finalizados. |
+| **Portal de médicos** · [medicos.clinicacmdh.com](https://medicos.clinicacmdh.com) | Médicos referentes | Cuenta individual: solicitudes digitales, citas y consulta de informes e imágenes de sus pacientes referidos. |
 | **Portal de centros de salud** | Centros de salud de la región | Cuenta por centro, con el nombre de quien consulta en cada evento de auditoría; solo ve los estudios que ese centro refirió. |
 | **Visor LUCIDA gratuito** · [lucidapacs.com](https://lucidapacs.com) | Cualquier persona | Abre CD, USB o carpetas DICOM en el navegador; las imágenes no salen del equipo. |
 
 Cada superficie ve solo lo que le corresponde: el médico, sus pacientes; el
 centro, sus referencias; el paciente, su propio expediente. El control de acceso
 se aplica en el servidor en cada consulta, no solo en la interfaz.
-
-#### Visor LUCIDA
-
-El visor de la plataforma se llama LUCIDA y su versión local es de uso libre:
-**[pruébalo en lucidapacs.com](https://lucidapacs.com)** con un CD, USB o carpeta
-DICOM, o con los estudios de demostración. Las imágenes se procesan en tu equipo
-y no se suben a ningún servidor.
-
-**Implementación.** Un solo núcleo de visualización (Viewer Core) sobre
-Cornerstone3D recibe imágenes de tres fuentes con el mismo contrato, de modo que
-el visor gratuito y el clínico son el mismo código, no una versión recortada:
-
-```
- CD / USB / carpeta ──> LocalDiscovery ──> LocalSource ──┐
- manifests estáticos ─────────────────────> DemoSource ──┼──> Viewer Core (Cornerstone3D)
- archivo clínico (R2 privado + D1) ───────> ClinicalSource┘
-```
-
-`LocalSource` lee `File`/`Blob` en el navegador, interpreta DICOMDIR (con
-respaldo de descubrimiento directo cuando está incompleto), archivos sin
-extensión, Encapsulated PDF y DICOM SR, sin base de datos ni persistencia.
-`ClinicalSource` sirve los originales desde almacenamiento privado con acceso
-por capacidad.
-
-**Funciones:**
-
-- Stack 2D con prefetch, ventana/nivel por modalidad, mediciones y anotaciones.
-- MPR ortogonal y oblicuo, proyecciones MIP/MinIP, líneas de referencia y
-  reconstrucción volumétrica de TC y RM.
-- Fusión PET/CT con cálculo de SUV; mastografía con hanging protocol y soporte
-  inicial de tomosíntesis.
-- Segmentación con estadísticas y superficie 3D; lectura y escritura de
-  **DICOM SEG** y **DICOM SR**, el formato en que un modelo de IA puede devolver
-  sus resultados al visor.
 
 #### Informe radiológico
 
@@ -161,10 +155,17 @@ por capacidad.
 | Imagen | Cornerstone3D 5.8, dicom-image-loader, dcmjs, dicom-parser |
 | Informe | Tiptap 3 / ProseMirror, nspell, jsPDF |
 | Backend | Cloudflare Workers, D1 (SQLite) + Drizzle ORM, R2 |
-| Pruebas | `node --test`: 128 archivos, más de 1,000 casos |
 
-Pendiente: soporte clínico completo de tomosíntesis y cine de ultrasonido, y el
-dictado por voz con asistencia de IA en el informe. No es un dispositivo médico
+**En desarrollo:**
+
+- **Redacción asistida por IA basada en LLMs.** Un borrador del informe listo
+  antes de que el radiólogo abra el estudio: visión por computadora analiza las
+  imágenes y un LLM redacta el borrador en la estructura del informe. El
+  radiólogo lo revisa, lo corrige y lo firma.
+- Dictado por voz integrado al editor.
+- Soporte clínico completo de tomosíntesis y cine de ultrasonido.
+
+No es un dispositivo médico
 certificado; el diagnóstico es responsabilidad del médico que interpreta. Los
 datos de demostración son sintéticos o de datasets públicos desidentificados,
 con su atribución y licencia.

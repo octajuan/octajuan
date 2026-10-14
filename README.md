@@ -179,13 +179,58 @@ certificado; el diagnóstico es responsabilidad del médico que interpreta. Los
 datos de demostración son sintéticos o de datasets públicos desidentificados,
 con su atribución y licencia.
 
-### 2. Aprendizaje profundo para nódulos tiroideos
+### 2. Sitio oficial del Congreso 25 Aniversario del Hospital de la Mujer
+
+**Programa oficial del congreso** · TypeScript, React 19, Vite, Cloudflare
+Pages, Pages Functions, D1 ·
+[congresohmujer.lucidapacs.com](https://congresohmujer.lucidapacs.com)
+
+Lo desarrollé y fue el programa oficial del congreso, del 7 al 9 de octubre de
+2026. Contribuyó a la imagen del evento, al que asistieron el coordinador de
+IMSS-Bienestar Michoacán, el secretario de Salud de Michoacán y el gobernador
+de Michoacán.
+
+**Funciones.**
+
+- Inicio que cambia con la hora oficial de Ciudad de México, sin importar la
+  zona horaria del teléfono: cuenta regresiva, actividad en curso por sala con
+  progreso y minutos restantes, siguiente actividad, recesos y cierre.
+- Programa de 50 actividades en dos salas, ponentes y búsqueda por palabra,
+  tema o participante.
+- Agenda personal sin cuenta: se guarda en el navegador, avisa traslapes y se
+  exporta a calendario (.ics, RFC 5545).
+- PWA instalable que abre sin conexión después de la primera visita.
+
+**Arquitectura y decisiones.**
+
+- Sitio estático servido desde la red de Cloudflare Pages en dos dominios. El
+  programa vive en un solo módulo de datos tipado; ningún componente contiene
+  horarios.
+- Sin servidor para el contenido. La única API es un contador anónimo de
+  visitas (Pages Functions + D1): un identificador aleatorio por apertura y un
+  trigger SQL evitan duplicados. No guarda IP, cookies ni identidades.
+- Service worker con el programa, las imágenes y las tipografías en caché.
+- Política de seguridad de contenido estricta: solo recursos propios, sin
+  scripts de terceros.
+- Verificación antes de publicar: 22 pruebas automatizadas (incluida
+  concurrencia sobre D1), recorridos en Chrome con reloj simulado en otra zona
+  horaria y cero infracciones de accesibilidad (Axe) de 320 a 1440 px.
+  Lighthouse móvil en la compilación local: rendimiento 92; accesibilidad,
+  buenas prácticas y SEO 100.
+
+**Durante el congreso.** La versión final se publicó el 6 de octubre y no hubo
+despliegues durante el evento. Del 7 al 9 de octubre, el contador del sitio
+sumó cerca de 1,050 visitas (aperturas o recargas de la página). Según
+Cloudflare Analytics, ninguna solicitud de un navegador recibió una respuesta de
+error del servidor (5xx).
+
+### 3. Aprendizaje profundo para nódulos tiroideos
 
 Tesis de especialidad (UNAM, 2025): *Desarrollo de un modelo de aprendizaje
 profundo para la discriminación de nódulos tiroideos susceptibles a biopsia
 mediante transferencia de aprendizaje.*
 
-### 3. Centro Diagnóstico Huandacareo
+### 4. Centro Diagnóstico Huandacareo
 
 Perfil público de la clínica y del trabajo de software que hacemos para ella:
 [cdhuandacareo](https://github.com/octajuan/cdhuandacareo).

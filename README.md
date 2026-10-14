@@ -54,16 +54,36 @@ El recorrido de un estudio:
 | **Mi embarazo** | Pacientes obstétricas | Dentro del mismo enlace, una línea del tiempo del embarazo construida con los datos estructurados del informe firmado (FUR, edad gestacional, biometría fetal). |
 | **Portal de médicos** · [medicos.clinicacmdh.com](https://medicos.clinicacmdh.com) | Médicos referentes | Cuenta individual: solicitudes digitales, citas y consulta de informes e imágenes de sus pacientes referidos, solo de estudios finalizados. |
 | **Portal de centros de salud** | Centros de salud de la región | Cuenta por centro, con el nombre de quien consulta en cada evento de auditoría; solo ve los estudios que ese centro refirió. |
-| **Visor local gratuito** · [lucidapacs.com](https://lucidapacs.com) | Cualquier persona | Abre CD, USB o carpetas DICOM en el navegador; las imágenes no salen del equipo. |
+| **Visor LUCIDA gratuito** · [lucidapacs.com](https://lucidapacs.com) | Cualquier persona | Abre CD, USB o carpetas DICOM en el navegador; las imágenes no salen del equipo. |
 
 Cada superficie ve solo lo que le corresponde: el médico, sus pacientes; el
 centro, sus referencias; el paciente, su propio expediente. El control de acceso
 se aplica en el servidor en cada consulta, no solo en la interfaz.
 
-#### Visor
+#### Visor LUCIDA
 
-Un solo núcleo de visualización sobre Cornerstone3D atiende el archivo clínico,
-el visor local y los demos:
+El visor de la plataforma se llama LUCIDA y su versión local es de uso libre:
+**[pruébalo en lucidapacs.com](https://lucidapacs.com)** con un CD, USB o carpeta
+DICOM, o con los estudios de demostración. Las imágenes se procesan en tu equipo
+y no se suben a ningún servidor.
+
+**Implementación.** Un solo núcleo de visualización (Viewer Core) sobre
+Cornerstone3D recibe imágenes de tres fuentes con el mismo contrato, de modo que
+el visor gratuito y el clínico son el mismo código, no una versión recortada:
+
+```
+ CD / USB / carpeta ──> LocalDiscovery ──> LocalSource ──┐
+ manifests estáticos ─────────────────────> DemoSource ──┼──> Viewer Core (Cornerstone3D)
+ archivo clínico (R2 privado + D1) ───────> ClinicalSource┘
+```
+
+`LocalSource` lee `File`/`Blob` en el navegador, interpreta DICOMDIR (con
+respaldo de descubrimiento directo cuando está incompleto), archivos sin
+extensión, Encapsulated PDF y DICOM SR, sin base de datos ni persistencia.
+`ClinicalSource` sirve los originales desde almacenamiento privado con acceso
+por capacidad.
+
+**Funciones:**
 
 - Stack 2D con prefetch, ventana/nivel por modalidad, mediciones y anotaciones.
 - MPR ortogonal y oblicuo, proyecciones MIP/MinIP, líneas de referencia y

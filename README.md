@@ -4,20 +4,56 @@
 Michoacán, México
 [LinkedIn](https://www.linkedin.com/in/octajuan) · octajuan@outlook.com
 
-Soy radiólogo adscrito en el Hospital de la Mujer (IMSS-Bienestar) y en una
-clínica de diagnóstico por imagen en Huandacareo, Michoacán. Además de
-interpretar estudios, construyo el software con el que trabajo: registro de
-pacientes, visor DICOM y editor de informes, en uso clínico diario.
+Radiólogo con experiencia práctica en desarrollo de software e inteligencia artificial
+aplicada a imagen médica. Diseñé, programé y opero en producción una plataforma
+radiológica completa: ingreso DICOM, visor web, informe estructurado y entrega
+segura de resultados. La uso todos los días para leer e informar estudios.
 
-Me interesa la inteligencia artificial aplicada al trabajo real del radiólogo:
-el reporte estructurado, el dictado y el apoyo a la interpretación, medidos por
-si ahorran tiempo y errores en la lectura, no por cómo se ven en una demo.
+## Resumen técnico
 
-> **In English.** Practicing radiologist (UNAM) who also builds clinical
-> software. I wrote and use daily a web platform for patient registration, DICOM
-> viewing (Cornerstone3D) and structured radiology reporting. My residency thesis
-> applied transfer learning to thyroid nodule biopsy triage. Interested in AI for
-> radiology workflow: structured reporting, dictation and reading support.
+- **Visor DICOM web sobre WebGL.** Cornerstone3D con MPR ortogonal y oblicuo,
+  MIP/MinIP, reconstrucción volumétrica, fusión PET/CT con SUV y mastografía.
+  Lectura y escritura de **DICOM SEG** y **DICOM SR**, el punto de integración
+  natural para devolver al visor las segmentaciones y hallazgos de un modelo.
+- **Inteligencia artificial.** Tesis de especialidad con aprendizaje profundo por
+  transferencia para clasificar nódulos tiroideos candidatos a biopsia. El
+  informe se guarda como JSON estructurado, no como texto libre, para que pueda
+  alimentar plantillas, dictado y LLMs sin reprocesar documentos.
+- **LLMs en el desarrollo.** Construyo con agentes de programación (Claude Code,
+  Codex) en un flujo con control de versiones, pruebas automatizadas y traspasos
+  documentados entre agentes. Sé dónde ayudan y dónde hay que verificar cada
+  línea, sobre todo en código clínico.
+- **APIs e integración.** Endpoints HTTP propios, tokens firmados con HMAC para
+  acceso de pacientes, contratos firmados entre servicios (citas, médicos,
+  solicitudes) y control de acceso aplicado en el servidor en cada consulta.
+- **Infraestructura serverless.** TypeScript estricto, React 19, Cloudflare
+  Workers, D1 (SQLite) con Drizzle ORM y almacenamiento de objetos R2 privado.
+  Más de 1,000 casos de prueba automatizados.
+
+## Impacto en la práctica
+
+- **Tiempo de lectura.** El estudio, sus previos y el editor del informe están
+  en una sola pantalla. Los estudios anteriores del mismo paciente se recuperan
+  y asocian automáticamente, en lugar de buscarlos a mano para comparar.
+- **Costos de producción.** El resultado (informe e imágenes) se entrega por un
+  enlace privado, sin depender de impresión ni de medios físicos en cada
+  estudio. La infraestructura serverless evita servidores propios y licencias
+  de un PACS comercial.
+- **Flujo de trabajo.** Solicitud, cita, registro, carga DICOM, informe y envío
+  ocurren en un solo sistema. Los médicos referentes y los centros de salud
+  consultan sus resultados en su propio portal, sin llamar a la clínica.
+- **Radiólogos de otros hospitales.** El visor local gratuito abre en el
+  navegador el CD o USB que trae el paciente, sin instalar el visor del
+  proveedor ni subir las imágenes. Sirve en equipos hospitalarios donde no se
+  permite instalar software y en cualquier sistema operativo.
+
+> **In English.** Radiologist (UNAM) with hands-on software engineering and
+> applied AI experience. I designed, built and run in production a full
+> radiology platform: DICOM ingestion, a WebGL viewer (Cornerstone3D: MPR,
+> volume rendering, PET/CT, DICOM SEG/SR), structured JSON reporting and signed
+> results delivery on Cloudflare Workers, D1 and R2, with 1,000+ automated tests.
+> Residency thesis on deep transfer learning for thyroid nodule biopsy triage.
+> I build with LLM coding agents under version control and test discipline.
 
 ---
 

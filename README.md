@@ -1,55 +1,46 @@
-# LUCIDA PACS
+# Dr. Juan Octaviano González Ambriz
 
-> El código fuente vive en un repositorio privado porque la plataforma está en
-> uso clínico real. Este repositorio público lo describe. Para una revisión
-> técnica del código, escríbeme y doy acceso de lectura temporal.
+**Médico radiólogo** · Imagenología Diagnóstica y Terapéutica (UNAM) · Morelia,
+Michoacán, México
+[LinkedIn](https://www.linkedin.com/in/octajuan) · octajuan@outlook.com
 
-Visor DICOM web, PACS y editor de informes radiológicos construidos alrededor de
-un solo núcleo de visualización. Lo desarrollo y lo uso yo mismo: soy radiólogo
-y todos los días interpreto e informo estudios con esta plataforma en una clínica
-de diagnóstico por imagen en Michoacán, México.
+Soy radiólogo adscrito en el Hospital de la Mujer (IMSS-Bienestar) y en una
+clínica de diagnóstico por imagen en Huandacareo, Michoacán. Además de
+interpretar estudios, construyo el software con el que trabajo: registro de
+pacientes, visor DICOM y editor de informes, en uso clínico diario.
 
-> **In English.** LUCIDA PACS is a browser-based DICOM viewer, cloud PACS surface
-> and structured radiology reporting editor, written by a practicing radiologist
-> and used daily in a diagnostic imaging clinic. One Cornerstone3D-based Viewer
-> Core serves local media (CD/USB, nothing uploaded), public de-identified demos
-> and the clinical archive. Stack: TypeScript, React 19, Cloudflare Workers, D1,
-> R2, Cornerstone3D 5.8, dcmjs, Tiptap/ProseMirror.
+Me interesa la inteligencia artificial aplicada al trabajo real del radiólogo:
+el reporte estructurado, el dictado y el apoyo a la interpretación, medidos por
+si ahorran tiempo y errores en la lectura, no por cómo se ven en una demo.
 
-En producción: [clinicacmdh.com](https://clinicacmdh.com) · Visor gratuito:
-[lucidapacs.com](https://lucidapacs.com)
+> **In English.** Practicing radiologist (UNAM) who also builds clinical
+> software. I wrote and use daily a web platform for patient registration, DICOM
+> viewing (Cornerstone3D) and structured radiology reporting. My residency thesis
+> applied transfer learning to thyroid nodule biopsy triage. Interested in AI for
+> radiology workflow: structured reporting, dictation and reading support.
 
 ---
 
-## Por qué existe
+## Proyectos
 
-Buena parte de los estudios que llegan a un radiólogo en México todavía viajan en
-CD o USB, cada uno con el visor de su proveedor, que a veces no abre, pide
-instalación o no corre en Mac. Del otro lado, los sistemas de informe que he
-usado tratan el texto como un documento de Word con membrete, no como datos.
+### 1. Plataforma clínica de Clínica CMDH
 
-Quería tres cosas que no encontraba juntas:
+**Registro, visor DICOM e informes radiológicos** · TypeScript, React,
+Cloudflare Workers, Cornerstone3D, Tiptap · en producción en
+[clinicacmdh.com](https://clinicacmdh.com)
 
-1. Abrir cualquier medio en el navegador **sin subir nada** a un servidor.
-2. Que el visor del archivo clínico y el visor "gratuito" fueran **el mismo**,
-   no una versión recortada.
-3. Que el informe se guarde como estructura, para que un día pueda alimentar
-   dictado, plantillas e IA sin reescribir todo.
-
-## En producción: clinicacmdh.com
-
-La plataforma no es un prototipo. Es el sistema con el que opera
-[Clínica CMDH](https://clinicacmdh.com), un centro de diagnóstico en
-Huandacareo, Michoacán (ultrasonido, rayos X, mastografía, laboratorio y
+Es el sistema con el que opera Clínica CMDH, un centro de diagnóstico en
+Huandacareo (ultrasonido, rayos X, mastografía, laboratorio y
 electrocardiograma). En mi práctica diaria registro a los pacientes, subo los
 estudios DICOM y redacto el informe en el editor integrado, junto al visor, sin
-cambiar de sistema.
+cambiar de sistema. El código vive en un repositorio privado por estar en uso
+clínico; puedo dar acceso de lectura temporal para una revisión técnica.
 
-El recorrido de un estudio, de la solicitud al resultado:
+El recorrido de un estudio:
 
 ```
  solicitud o cita ──> registro del paciente ──> adquisición y carga DICOM
-        ──> interpretación en el visor clínico + informe en el editor integrado
+        ──> interpretación en el visor + informe en el editor integrado
         ──> envío del resultado ──> paciente · médico referente · centro de salud
 ```
 
@@ -58,126 +49,83 @@ El recorrido de un estudio, de la solicitud al resultado:
 | **Sitio público** · [clinicacmdh.com](https://clinicacmdh.com) | Pacientes y médicos | Catálogo de estudios, horarios, ubicación y preparación; entrada a solicitudes, citas y portal médico. |
 | **Solicitudes y citas** · [solicitudes](https://solicitudes.clinicacmdh.com) · [citas](https://citas.clinicacmdh.com) | Pacientes y médicos | Solicitud de estudio y cita en línea que llegan directamente al registro de la clínica. |
 | **Registro clínico** | Personal de la clínica | Pacientes, visitas y estudios con auditoría; carga de DICOM a almacenamiento privado; expediente longitudinal que recupera estudios previos del mismo paciente. |
-| **Visor clínico + editor de informes** | Radiólogo | El Viewer Core sobre los originales del archivo, lado a lado con el editor estructurado; versionado, firma y PDF tamaño carta. |
-| **Resultado del paciente** | Pacientes | Enlace privado firmado (HMAC, revocable) que se envía por WhatsApp: informe, imágenes en el visor y estudios anteriores, sin crear cuenta. |
+| **Visor clínico + editor de informes** | Radiólogo | Visor sobre los originales del archivo, lado a lado con el editor estructurado; versionado, firma y PDF tamaño carta. |
+| **Resultado del paciente** | Pacientes | Enlace privado firmado (HMAC, revocable) que se envía por WhatsApp: informe, imágenes y estudios anteriores, sin crear cuenta. |
 | **Mi embarazo** | Pacientes obstétricas | Dentro del mismo enlace, una línea del tiempo del embarazo construida con los datos estructurados del informe firmado (FUR, edad gestacional, biometría fetal). |
 | **Portal de médicos** · [medicos.clinicacmdh.com](https://medicos.clinicacmdh.com) | Médicos referentes | Cuenta individual: solicitudes digitales, citas y consulta de informes e imágenes de sus pacientes referidos, solo de estudios finalizados. |
 | **Portal de centros de salud** | Centros de salud de la región | Cuenta por centro, con el nombre de quien consulta en cada evento de auditoría; solo ve los estudios que ese centro refirió. |
-| **Visor gratuito** · [lucidapacs.com](https://lucidapacs.com) | Cualquier persona | Abre CD, USB o carpetas DICOM en el navegador; las imágenes no salen del equipo. |
+| **Visor local gratuito** · [lucidapacs.com](https://lucidapacs.com) | Cualquier persona | Abre CD, USB o carpetas DICOM en el navegador; las imágenes no salen del equipo. |
 
 Cada superficie ve solo lo que le corresponde: el médico, sus pacientes; el
 centro, sus referencias; el paciente, su propio expediente. El control de acceso
 se aplica en el servidor en cada consulta, no solo en la interfaz.
 
-## Qué hace hoy
+#### Visor
 
-**Visor (Viewer Core)**
+Un solo núcleo de visualización sobre Cornerstone3D atiende el archivo clínico,
+el visor local y los demos:
 
-- Stack 2D con prefetch, ventana/nivel con presets por modalidad, mediciones y
-  anotaciones.
-- MPR axial/coronal/sagital, MPR oblicuo y proyecciones (MIP/MinIP), con líneas
-  de referencia.
-- Reconstrucción volumétrica de TC y RM.
-- Fusión PET/CT local con cálculo de SUV.
-- Mastografía con hanging protocol y presentación por proyección; soporte inicial
-  de tomosíntesis (DBT).
+- Stack 2D con prefetch, ventana/nivel por modalidad, mediciones y anotaciones.
+- MPR ortogonal y oblicuo, proyecciones MIP/MinIP, líneas de referencia y
+  reconstrucción volumétrica de TC y RM.
+- Fusión PET/CT con cálculo de SUV; mastografía con hanging protocol y soporte
+  inicial de tomosíntesis.
 - Segmentación con estadísticas y superficie 3D; lectura y escritura de
-  **DICOM SEG** y **DICOM SR**.
-- Lectura de DICOMDIR (con fallback a descubrimiento directo), archivos sin
-  extensión, Encapsulated PDF y PDF convencional.
+  **DICOM SEG** y **DICOM SR**, el formato en que un modelo de IA puede devolver
+  sus resultados al visor.
 
-**Fuentes de datos, un solo visor**
+#### Informe radiológico
 
-```
- CD / USB / carpeta ──> LocalDiscovery ──> LocalSource ──┐
- manifests estáticos ─────────────────────> DemoSource ──┼──> Viewer Core (Cornerstone3D)
- archivo clínico (R2 privado + D1) ───────> ClinicalSource┘
-```
-
-`LocalSource` procesa `File`/`Blob` en el dispositivo: sin D1, sin R2, sin
-analytics, sin persistencia. Es el modo que cualquiera puede probar en el sitio.
-
-**Informe radiológico**
-
-- Editor estructurado sobre Tiptap/ProseMirror; el contenido se guarda como JSON
-  validado, no como HTML del navegador.
-- Pegado clínico desde Word o desde un LLM: se limpia el ruido de Office y se
-  conservan párrafos, listas, negritas y tablas sin convertir los saltos visuales
-  en saltos reales.
+- Editor estructurado sobre Tiptap/ProseMirror; el informe se guarda como JSON
+  validado, no como HTML ni como un documento de Word. Esa estructura es la base
+  para plantillas, dictado e IA.
+- Pegado clínico desde Word o desde un LLM: se limpia el ruido de formato y se
+  conservan párrafos, listas, negritas y tablas.
 - Corrector ortográfico local con diccionario es-MX y un léxico médico propio
-  (12 especialidades + CIE-10) que hereda flexiones: si el léxico acepta
-  *hipoecoico*, acepta *hipoecoicas*. Corre en un Web Worker y no envía texto a
-  terceros.
-- Versionado de informes y PDF tamaño carta con membrete, paginación, firma y
-  código QR del estudio en cada hoja.
+  (12 especialidades + CIE-10) que hereda flexiones: si acepta *hipoecoico*,
+  acepta *hipoecoicas*. Corre en el navegador y no envía texto a terceros.
+- Versionado, PDF tamaño carta con membrete, paginación, firma y código QR.
 
-## Decisiones que me importan
+#### Decisiones de diseño
 
-- **Local significa local.** En el modo gratuito ninguna imagen ni metadata sale
-  del equipo. No hay "upload de respaldo" escondido.
 - **No relajar la geometría para que algo "se vea".** Si una serie de TC tiene
   espaciado irregular o inclinación del gantry, el MPR se deshabilita y se
-  explica por qué. Un MPR bonito con geometría falsa es un error diagnóstico
-  esperando a ocurrir.
+  explica por qué. Un MPR con geometría falsa es un error diagnóstico esperando
+  a ocurrir.
 - **Degradación honesta.** Un archivo incompatible produce un mensaje
   recuperable, nunca una clasificación inventada.
-- **Un solo Viewer Core.** Cualquier mejora de interacción se hace una vez y la
-  heredan el archivo clínico, el visor local y los demos.
 - **El informe es dato.** JSON estructurado como formato canónico; el PDF es una
   salida, no la fuente.
-
-## Arquitectura
-
-```
- navegador ──HTTPS──> Cloudflare Worker (Vinext/React, App Router)
-                          ├── app/        páginas y API
-                          ├── lib/        dominio: DICOM, viewer-core, editor, auth
-                          ├── D1 (SQLite) metadatos clínicos vía Drizzle ORM
-                          └── R2 privado  originales DICOM con acceso por capacidad
-```
+- **Local significa local.** En el visor gratuito ninguna imagen sale del equipo.
 
 | Capa | Tecnología |
 | --- | --- |
 | Lenguaje | TypeScript (estricto) |
 | UI | React 19, Tailwind 4 |
-| Imagen | Cornerstone3D 5.8.2, dicom-image-loader, dcmjs, dicom-parser |
-| Informe | Tiptap 3 / ProseMirror, nspell, jsPDF, qrcode |
-| Backend | Cloudflare Workers, D1 + Drizzle ORM, R2 |
+| Imagen | Cornerstone3D 5.8, dicom-image-loader, dcmjs, dicom-parser |
+| Informe | Tiptap 3 / ProseMirror, nspell, jsPDF |
+| Backend | Cloudflare Workers, D1 (SQLite) + Drizzle ORM, R2 |
 | Pruebas | `node --test`: 128 archivos, más de 1,000 casos |
 
-Las decisiones de arquitectura se documentan como ADRs dentro del repositorio.
+Pendiente: soporte clínico completo de tomosíntesis y cine de ultrasonido, y el
+dictado por voz con asistencia de IA en el informe. No es un dispositivo médico
+certificado; el diagnóstico es responsabilidad del médico que interpreta. Los
+datos de demostración son sintéticos o de datasets públicos desidentificados,
+con su atribución y licencia.
 
+### 2. Aprendizaje profundo para nódulos tiroideos
 
-## Datos de demostración
+Tesis de especialidad (UNAM, 2025): *Desarrollo de un modelo de aprendizaje
+profundo para la discriminación de nódulos tiroideos susceptibles a biopsia
+mediante transferencia de aprendizaje.*
 
-Los estudios de demostración son sintéticos o provienen de datasets
-públicos desidentificados. Las cabeceras se revisaron para confirmar que no
-contienen nombre, ID, fechas ni institución del paciente original. Cada dataset
-conserva su atribución y licencia; por ejemplo, la angio-TC de cabeza y cuello proviene de Blagosklonova E, *et al.*
-Zenodo; 2025. doi:10.5281/zenodo.15697196 (CC BY 4.0).
+### 3. Centro Diagnóstico Huandacareo
 
-El repositorio no contiene datos de pacientes reales.
+Perfil público de la clínica y del trabajo de software que hacemos para ella:
+[cdhuandacareo](https://github.com/octajuan/cdhuandacareo).
 
-## Estado y límites
+## Publicaciones
 
-Es un proyecto en desarrollo activo y en uso clínico real, hecho por una sola
-persona. Lo que todavía no considero completo:
-
-- Tomosíntesis y cine de ultrasonido no tienen soporte clínico completo.
-- Faltan datasets demo definitivos para TC multifásica, RM de encéfalo
-  multisecuencia y US multiframe.
-- El dictado por voz y la asistencia con IA en el informe están planeados, no
-  implementados.
-
-No es un dispositivo médico certificado. Cualquier uso diagnóstico es
-responsabilidad del médico que interpreta.
-
-## Autor
-
-**Juan Octaviano González Ambriz**, médico radiólogo (Imagenología Diagnóstica y
-Terapéutica, UNAM).
-[LinkedIn](https://www.linkedin.com/in/octajuan) · octajuan@outlook.com
-
-## Licencia
-
-Todos los derechos reservados.
+- Ambriz JOG, Macías AP. Case report on diaphragmatic hernia with renal ectopia
+  as a cause of low back pain and dyspnea. *Asian J Res Rep Urol.*
+  2024;7(1):41–45. [doi:10.9734/ajrru/2024/v7i1117](https://doi.org/10.9734/ajrru/2024/v7i1117)
